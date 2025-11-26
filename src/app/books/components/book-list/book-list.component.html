@@ -1,0 +1,43 @@
+<ng-container *ngIf="books?.length; else emptyState">
+  <ul class="books-grid">
+    <li *ngFor="let book of books; trackBy: trackById" class="book-card">
+      <div class="book-meta">
+        <div class="title-row">
+          <h3>{{ book.title }}</h3>
+          <span class="format">{{ book.format }}</span>
+        </div>
+        <p class="author" *ngIf="book.author">By {{ book.author }}</p>
+        <p class="details">
+          <span *ngIf="book.price as price">Price: {{ price | currency:'USD':'symbol':'1.0-0' }}</span>
+          <span>On hand: {{ book.copiesOnHand }}</span>
+        </p>
+        <p class="notes" *ngIf="book.notes">{{ book.notes }}</p>
+      </div>
+      <div class="actions">
+        <button type="button"
+                class="ghost"
+                [disabled]="savingMap[book.id]"
+                (click)="emitAdjust(book.id, -1)">
+          -1
+        </button>
+        <button type="button"
+                [disabled]="savingMap[book.id]"
+                (click)="emitAdjust(book.id, 1)">
+          +1
+        </button>
+        <button type="button"
+                class="remove"
+                (click)="emitRemove(book.id)">
+          ×
+        </button>
+        <span class="row-status" *ngIf="savingMap[book.id]">Saving…</span>
+      </div>
+    </li>
+  </ul>
+</ng-container>
+
+<ng-template #emptyState>
+  <div class="empty-state">
+    <p>No books yet. Add your first title above.</p>
+  </div>
+</ng-template>

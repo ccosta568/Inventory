@@ -1,0 +1,13 @@
+diff --git a/node_modules/serverless/lib/utils/require-with-import-fallback.js b/node_modules/serverless/lib/utils/require-with-import-fallback.js
+index 8f723c5..9007625 100644
+--- a/node_modules/serverless/lib/utils/require-with-import-fallback.js
++++ b/node_modules/serverless/lib/utils/require-with-import-fallback.js
+@@ -6,7 +6,7 @@ module.exports = async (modPath) => {
+     return mod && mod.default ? mod.default : mod;
+   } catch (error) {
+     // Fallback to import() if the runtime supports native ESM
+-    if (error.code === 'ERR_REQUIRE_ESM') {
++    if (error.code === 'ERR_REQUIRE_ESM' || error.code === 'ERR_REQUIRE_ASYNC_MODULE') {
+       return (await require('./import-esm')(modPath)).default;
+     }
+     throw error;

@@ -1,0 +1,100 @@
+<section class="books-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Inventory</p>
+      <h2>Books on hand</h2>
+      <p class="subtitle">Add or adjust titles in seconds while you are on the road.</p>
+    </div>
+    <div class="sync-card" *ngIf="syncStatus$ | async as status">
+      <span class="label">Sync status</span>
+      <div class="value" [class.pending]="status.pending">
+        <ng-container *ngIf="status.pending">Syncing…</ng-container>
+        <ng-container *ngIf="!status.pending && status.queueSize">Pending {{ status.queueSize }} change(s)</ng-container>
+        <ng-container *ngIf="!status.pending && !status.queueSize && status.lastSuccess">
+          Updated {{ status.lastSuccess | date:'shortTime' }}
+        </ng-container>
+        <ng-container *ngIf="!status.pending && !status.queueSize && !status.lastSuccess">
+          Ready
+        </ng-container>
+      </div>
+      <button type="button" class="sync-button" (click)="triggerSync()" [disabled]="manualSyncing || status.pending">
+        {{ manualSyncing || status.pending ? 'Syncing…' : 'Sync now' }}
+      </button>
+      <p class="sync-error" *ngIf="status.lastError">{{ status.lastError }}</p>
+    </div>
+  </header>
+
+  <form (ngSubmit)="addBook()" class="add-form" autocomplete="off" #bookForm="ngForm">
+    <div class="form-field">
+      <label for="title">Title</label>
+      <input id="title"
+             name="title"
+             [(ngModel)]="newBook.title"
+             required
+             placeholder="Title" />
+    </div>
+
+    <div class="form-field">
+      <label for="author">Author</label>
+      <input id="author"
+             name="author"
+             [(ngModel)]="newBook.author"
+             placeholder="Author" />
+    </div>
+
+    <div class="form-field">
+      <label for="format">Format</label>
+      <select id="format" name="format" [(ngModel)]="newBook.format">
+        <option value="paperback">Paperback</option>
+        <option value="hardcover">Hardcover</option>
+        <option value="ebook">Ebook</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="price">Price</label>
+      <input id="price"
+             name="price"
+             type="number"
+             min="0"
+             step="0.01"
+             [(ngModel)]="newBook.price"
+             placeholder="15" />
+    </div>
+
+    <div class="form-field">
+      <label for="copiesOnHand">Copies</label>
+      <input id="copiesOnHand"
+             name="copiesOnHand"
+             type="number"
+             min="0"
+             [(ngModel)]="newBook.copiesOnHand"
+             placeholder="0" />
+    </div>
+
+    <div class="form-field notes-field">
+      <label for="notes">Notes</label>
+      <textarea id="notes"
+                name="notes"
+                rows="2"
+                [(ngModel)]="newBook.notes"
+                placeholder="Edition, location, etc."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="saving || !bookForm.form.valid">
+        {{ saving ? 'Saving…' : 'Add book' }}
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="error" class="error-banner">{{ error }}</div>
+
+  <app-book-list
+    [books]="books$ | async"
+    [savingMap]="perBookSaving"
+    (adjust)="handleAdjust($event)"
+    (remove)="confirmRemove($event)">
+  </app-book-list>
+</section>

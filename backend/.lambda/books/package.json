@@ -1,0 +1,10 @@
+{
+  "name": "author-inventory-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "aws-sdk": "^2.1360.0",
+    "uuid": "^9.0.0"
+  }
+}

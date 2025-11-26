@@ -1,0 +1,33 @@
+<section class="reports" *ngIf="report$ | async as report">
+  <header>
+    <p class="eyebrow">Insights</p>
+    <h2>At-a-glance performance</h2>
+    <p class="subtitle">Track inventory levels, event activity, and top sellers.</p>
+  </header>
+
+  <div class="metrics">
+    <div class="metric-card">
+      <p class="label">On-hand inventory</p>
+      <p class="value">{{ report.totalOnHand }}</p>
+    </div>
+    <div class="metric-card">
+      <p class="label">Events logged</p>
+      <p class="value">{{ report.eventCount }}</p>
+    </div>
+    <div class="metric-card">
+      <p class="label">Units sold</p>
+      <p class="value">{{ report.totalSold }}</p>
+    </div>
+  </div>
+
+  <div class="best-sellers">
+    <h3>Top sellers</h3>
+    <ul>
+      <li *ngFor="let entry of report.bestSellers">
+        <span class="title">{{ entry.title }}</span>
+        <span class="qty">{{ entry.qty }} sold</span>
+      </li>
+      <li *ngIf="!report.bestSellers.length" class="empty">No sales logged yet.</li>
+    </ul>
+  </div>
+</section>

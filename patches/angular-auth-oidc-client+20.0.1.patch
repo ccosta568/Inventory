@@ -1,0 +1,14 @@
+diff --git a/node_modules/angular-auth-oidc-client/fesm2022/angular-auth-oidc-client.mjs b/node_modules/angular-auth-oidc-client/fesm2022/angular-auth-oidc-client.mjs
+index 37f8cb0..febac50 100644
+--- a/node_modules/angular-auth-oidc-client/fesm2022/angular-auth-oidc-client.mjs
++++ b/node_modules/angular-auth-oidc-client/fesm2022/angular-auth-oidc-client.mjs
+@@ -1,7 +1,7 @@
+-import { isPlatformBrowser, CommonModule } from '@angular/common';
++import { isPlatformBrowser, CommonModule, DOCUMENT } from '@angular/common';
+ import { HttpParams, HttpClient, HttpHeaders, HttpErrorResponse, HttpResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+ import * as i0 from '@angular/core';
+-import { InjectionToken, Injectable, inject, DOCUMENT, NgZone, PLATFORM_ID, isDevMode, RendererFactory2, makeEnvironmentProviders, APP_INITIALIZER, NgModule } from '@angular/core';
++import { InjectionToken, Injectable, inject, NgZone, PLATFORM_ID, isDevMode, RendererFactory2, makeEnvironmentProviders, APP_INITIALIZER, NgModule } from '@angular/core';
+ import { of, forkJoin, ReplaySubject, from, BehaviorSubject, throwError, timer, Observable, Subject, TimeoutError } from 'rxjs';
+ import { map, mergeMap, tap, distinctUntilChanged, switchMap, retryWhen, catchError, retry, concatMap, finalize, filter, take, timeout } from 'rxjs/operators';
+ import { base64url } from 'rfc4648';

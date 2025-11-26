@@ -1,0 +1,81 @@
+.reports {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.subtitle {
+  color: #475569;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.metric-card {
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.metric-card .label {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: #94a3b8;
+}
+
+.metric-card .value {
+  margin: 0.4rem 0 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.best-sellers {
+  background: #fff;
+  border-radius: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 1rem;
+}
+
+.best-sellers ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.best-sellers li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.best-sellers li:last-child {
+  border-bottom: none;
+}
+
+.best-sellers .title {
+  font-weight: 600;
+}
+
+.best-sellers .qty {
+  color: #475569;
+}
+
+.best-sellers .empty {
+  justify-content: center;
+  color: #94a3b8;
+}

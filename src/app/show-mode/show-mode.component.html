@@ -1,0 +1,45 @@
+<section class="show-mode">
+  <header>
+    <div>
+      <p class="eyebrow">Show mode</p>
+      <h2>Tap to record sales</h2>
+      <p class="subtitle">Perfect for conventions or pop-up events when you need rapid entry.</p>
+    </div>
+    <form class="event-form" (ngSubmit)="logEvent()" autocomplete="off">
+      <div class="field">
+        <label for="eventName">Event name</label>
+        <input id="eventName" name="eventName" [(ngModel)]="eventName" placeholder="Spring Market" />
+      </div>
+      <div class="field">
+        <label for="eventDate">Date</label>
+        <input id="eventDate" name="eventDate" type="date" [(ngModel)]="eventDate" />
+      </div>
+      <div class="field notes">
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes" rows="2" [(ngModel)]="notes" placeholder="Booth number, weather, etc."></textarea>
+      </div>
+      <button type="submit" [disabled]="saving || !hasSelection">
+        {{ saving ? 'Logging…' : 'Log event' }}
+      </button>
+    </form>
+  </header>
+
+  <div class="status-row">
+    <div class="message" *ngIf="message">{{ message }}</div>
+    <div class="error" *ngIf="error">{{ error }}</div>
+  </div>
+
+  <div class="show-grid">
+    <div class="show-card" *ngFor="let book of books$ | async">
+      <div class="info">
+        <h3>{{ book.title }}</h3>
+        <p class="meta">{{ book.format }} • On hand: {{ book.copiesOnHand }}</p>
+      </div>
+      <div class="counter">
+        <button type="button" (click)="adjustSelection(book.id, -1)" [disabled]="!selections[book.id]">-</button>
+        <span>{{ selections[book.id] || 0 }}</span>
+        <button type="button" (click)="adjustSelection(book.id, 1)">+1</button>
+      </div>
+    </div>
+  </div>
+</section>

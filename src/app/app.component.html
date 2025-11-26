@@ -1,0 +1,40 @@
+<div class="app-shell">
+  <header class="app-header">
+    <div class="brand">
+      <span class="dot"></span>
+      <div class="brand-text">
+        <p class="eyebrow">Author Toolkit</p>
+        <h1>Inventory &amp; Sales</h1>
+      </div>
+    </div>
+    <nav class="app-nav">
+      <a routerLink="/books" routerLinkActive="active">Inventory</a>
+      <a routerLink="/show" routerLinkActive="active">Show mode</a>
+      <a routerLink="/reports" routerLinkActive="active">Reports</a>
+    </nav>
+    <div class="sync-pill" *ngIf="syncStatus$ | async as status">
+      <span>{{ status.pending ? 'Syncing…' : status.queueSize + ' pending' }}</span>
+    </div>
+  </header>
+  <section class="auth-panel">
+    <div *ngIf="isAuthenticated; else noAuth">
+      <button type="button" (click)="logout()">Logout</button>
+
+      <br />
+      Is Authenticated: {{ isAuthenticated }}
+
+      <br />
+      userData:
+      <pre>{{ userData | json }}</pre>
+    </div>
+
+    <ng-template #noAuth>
+      <button type="button" (click)="login()">Login</button>
+      <hr />
+    </ng-template>
+  </section>
+
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+</div>
