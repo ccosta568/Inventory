@@ -4,6 +4,8 @@ exports.EVENT_META_GSI_SK = void 0;
 exports.ownerPartition = ownerPartition;
 exports.bookPartition = bookPartition;
 exports.bookSortKey = bookSortKey;
+exports.tierSortKey = tierSortKey;
+exports.tierPrefix = tierPrefix;
 exports.eventPartition = eventPartition;
 exports.eventSortKey = eventSortKey;
 exports.eventLinePartition = eventLinePartition;
@@ -19,6 +21,12 @@ function bookPartition(ownerId) {
 }
 function bookSortKey(bookId) {
     return `BOOK#${bookId}`;
+}
+function tierSortKey(bookId, tierId) {
+    return `BOOK#${bookId}#TIER#${tierId}`;
+}
+function tierPrefix(bookId) {
+    return `BOOK#${bookId}#TIER#`;
 }
 function eventPartition(ownerId) {
     return `EVENT#${ownerPartition(ownerId)}`;

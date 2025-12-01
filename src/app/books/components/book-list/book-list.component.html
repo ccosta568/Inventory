@@ -1,37 +1,90 @@
 <ng-container *ngIf="books?.length; else emptyState">
   <ul class="books-grid">
     <li *ngFor="let book of books; trackBy: trackById" class="book-card">
-      <div class="book-meta">
-        <div class="title-row">
-          <h3>{{ book.title }}</h3>
-          <span class="format">{{ book.format }}</span>
+      <div class="book-header">
+        <div>
+          <div class="title-row">
+            <h3>{{ book.title }}</h3>
+            <span class="format">{{ book.format }}</span>
+          </div>
+          <p class="author" *ngIf="book.author">By {{ book.author }}</p>
+          <p class="book-notes" *ngIf="book.notes">{{ book.notes }}</p>
         </div>
-        <p class="author" *ngIf="book.author">By {{ book.author }}</p>
-        <p class="details">
-          <span *ngIf="book.price as price">Price: {{ price | currency:'USD':'symbol':'1.0-0' }}</span>
-          <span>On hand: {{ book.copiesOnHand }}</span>
-        </p>
-        <p class="notes" *ngIf="book.notes">{{ book.notes }}</p>
-      </div>
-      <div class="actions">
-        <button type="button"
-                class="ghost"
-                [disabled]="savingMap[book.id]"
-                (click)="emitAdjust(book.id, -1)">
-          -1
-        </button>
-        <button type="button"
-                [disabled]="savingMap[book.id]"
-                (click)="emitAdjust(book.id, 1)">
-          +1
-        </button>
+        <div class="totals">
+          <span>Total on hand</span>
+          <strong>{{ book.totalOnHand }}</strong>
+        </div>
         <button type="button"
                 class="remove"
+                title="Remove book"
+                [disabled]="bookSavingMap[book.id]"
                 (click)="emitRemove(book.id)">
           ×
         </button>
-        <span class="row-status" *ngIf="savingMap[book.id]">Saving…</span>
       </div>
+
+      <table class="tiers-table">
+        <thead>
+          <tr>
+            <th>Price</th>
+            <th>On hand</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let tier of book.priceTiers">
+            <td>{{ tier.price | currency:'USD':'symbol':'1.0-0' }}</td>
+            <td>{{ tier.copiesOnHand }}</td>
+            <td>{{ tier.notes || '—' }}</td>
+            <td class="tier-actions">
+              <button type="button"
+                      class="ghost"
+                      [disabled]="tierSavingMap[tierKey(tier.bookId || book.id, tier.tierId)] || tier.copiesOnHand <= 0"
+                      (click)="emitAdjustTier(book, tier, -1)">
+                -1
+              </button>
+              <button type="button"
+                      [disabled]="tierSavingMap[tierKey(tier.bookId || book.id, tier.tierId)]"
+                      (click)="emitAdjustTier(book, tier, 1)">
+                +1
+              </button>
+              <span class="row-status" *ngIf="tierSavingMap[tierKey(tier.bookId || book.id, tier.tierId)]">Saving…</span>
+            </td>
+          </tr>
+          <tr class="new-tier-row">
+            <td>
+              <input type="number"
+                     min="0"
+                     step="0.01"
+                     placeholder="12"
+                     [ngModel]="getTierState(book.id).price"
+                     (ngModelChange)="updateTierState(book.id, 'price', $event)" />
+            </td>
+            <td>
+              <input type="number"
+                     min="0"
+                     placeholder="0"
+                     [ngModel]="getTierState(book.id).copies"
+                     (ngModelChange)="updateTierState(book.id, 'copies', $event)" />
+            </td>
+            <td>
+              <input type="text"
+                     placeholder="Tier notes"
+                     [ngModel]="getTierState(book.id).notes"
+                     (ngModelChange)="updateTierState(book.id, 'notes', $event)" />
+            </td>
+            <td class="tier-actions">
+              <button type="button"
+                      class="ghost"
+                      [disabled]="bookSavingMap[book.id]"
+                      (click)="submitNewTier(book.id)">
+                + Add tier
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </li>
   </ul>
 </ng-container>

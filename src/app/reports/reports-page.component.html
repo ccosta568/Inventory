@@ -18,16 +18,36 @@
       <p class="label">Units sold</p>
       <p class="value">{{ report.totalSold }}</p>
     </div>
+    <div class="metric-card">
+      <p class="label">Total revenue</p>
+      <p class="value">{{ report.totalRevenue | currency:'USD':'symbol':'1.0-0' }}</p>
+    </div>
   </div>
 
   <div class="best-sellers">
     <h3>Top sellers</h3>
-    <ul>
-      <li *ngFor="let entry of report.bestSellers">
-        <span class="title">{{ entry.title }}</span>
-        <span class="qty">{{ entry.qty }} sold</span>
-      </li>
-      <li *ngIf="!report.bestSellers.length" class="empty">No sales logged yet.</li>
-    </ul>
+    <div *ngIf="report.bestSellers.length; else emptyState" class="seller-list">
+      <div class="seller-card" *ngFor="let entry of report.bestSellers">
+        <div class="seller-header">
+          <div>
+            <p class="title">{{ entry.title }}</p>
+            <p class="format" *ngIf="entry.format">{{ entry.format }}</p>
+          </div>
+          <div class="totals">
+            <span>{{ entry.totalUnits }} sold</span>
+            <strong>{{ entry.totalRevenue | currency:'USD':'symbol':'1.0-0' }}</strong>
+          </div>
+        </div>
+        <ul class="tier-breakdown">
+          <li *ngFor="let tier of entry.tiers">
+            <span>{{ tier.qty }} &#64; {{ tier.price | currency:'USD':'symbol':'1.0-0' }}</span>
+            <span>{{ tier.revenue | currency:'USD':'symbol':'1.0-0' }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <ng-template #emptyState>
+      <p class="empty">No sales logged yet.</p>
+    </ng-template>
   </div>
 </section>

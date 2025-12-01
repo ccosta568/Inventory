@@ -96,7 +96,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/author-inventory/dev/1764183853227-2025-11-26T19:04:13.227Z/author-inventory.zip"
+          "S3Key": "serverless/author-inventory/dev/1764546981674-2025-11-30T23:56:21.674Z/author-inventory.zip"
         },
         "Handler": "backend/src/handlers/books.handler",
         "Runtime": "nodejs20.x",
@@ -111,7 +111,10 @@
             "EXPORT_BUCKET_NAME": {
               "Ref": "InventoryExportBucket"
             },
-            "ALLOW_DEV_AUTH": "true",
+            "COGNITO_USER_POOL_ID": "us-east-1_3XVqDIc0T",
+            "COGNITO_USER_POOL_CLIENT_ID": "78b8ilrnvr1m8ft2ks2l06eibe",
+            "COGNITO_DOMAIN": "https://author-inventory-dev.auth.us-east-1.amazoncognito.com",
+            "ALLOW_DEV_AUTH": "false",
             "DEV_AUTH_USER": "dev-user"
           }
         },
@@ -134,7 +137,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/author-inventory/dev/1764183853227-2025-11-26T19:04:13.227Z/author-inventory.zip"
+          "S3Key": "serverless/author-inventory/dev/1764546981674-2025-11-30T23:56:21.674Z/author-inventory.zip"
         },
         "Handler": "backend/src/handlers/events.handler",
         "Runtime": "nodejs20.x",
@@ -149,7 +152,10 @@
             "EXPORT_BUCKET_NAME": {
               "Ref": "InventoryExportBucket"
             },
-            "ALLOW_DEV_AUTH": "true",
+            "COGNITO_USER_POOL_ID": "us-east-1_3XVqDIc0T",
+            "COGNITO_USER_POOL_CLIENT_ID": "78b8ilrnvr1m8ft2ks2l06eibe",
+            "COGNITO_DOMAIN": "https://author-inventory-dev.auth.us-east-1.amazoncognito.com",
+            "ALLOW_DEV_AUTH": "false",
             "DEV_AUTH_USER": "dev-user"
           }
         },
@@ -172,7 +178,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/author-inventory/dev/1764183853227-2025-11-26T19:04:13.227Z/author-inventory.zip"
+          "S3Key": "serverless/author-inventory/dev/1764546981674-2025-11-30T23:56:21.674Z/author-inventory.zip"
         },
         "Handler": "backend/src/handlers/exporter.handler",
         "Runtime": "nodejs20.x",
@@ -187,7 +193,10 @@
             "EXPORT_BUCKET_NAME": {
               "Ref": "InventoryExportBucket"
             },
-            "ALLOW_DEV_AUTH": "true",
+            "COGNITO_USER_POOL_ID": "us-east-1_3XVqDIc0T",
+            "COGNITO_USER_POOL_CLIENT_ID": "78b8ilrnvr1m8ft2ks2l06eibe",
+            "COGNITO_DOMAIN": "https://author-inventory-dev.auth.us-east-1.amazoncognito.com",
+            "ALLOW_DEV_AUTH": "false",
             "DEV_AUTH_USER": "dev-user"
           }
         },
@@ -203,34 +212,34 @@
         "ExporterLambdaRole"
       ]
     },
-    "BooksLambdaVersionbkderT9LQRKtMbwdVIq73xRBQi6qunAvukpXudjTvZU": {
+    "BooksLambdaVersionO7R3IAsA2oTeP2g3EWXdDlnPjwr0no4e75Qh40DD84": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "BooksLambdaFunction"
         },
-        "CodeSha256": "VdQ8K/rHNPx/16okaT0T6Tq6PDxO+/nFlLmdhBLFeq8="
+        "CodeSha256": "YUIHOrQMhPE4j4m17NineTdTY9Vi3hHyq4gTYWiccVw="
       }
     },
-    "EventsLambdaVersiondRIq8YCcdyWxDfl9xIQdjNYbDDQ2oo351FJ1CYDvA": {
+    "EventsLambdaVersiono5nCvqitCKpyjayoSjVyghQU5vIilc55b3CawSyk": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "EventsLambdaFunction"
         },
-        "CodeSha256": "VdQ8K/rHNPx/16okaT0T6Tq6PDxO+/nFlLmdhBLFeq8="
+        "CodeSha256": "YUIHOrQMhPE4j4m17NineTdTY9Vi3hHyq4gTYWiccVw="
       }
     },
-    "NightlyExportLambdaVersionkxrIpLPSIzzI5qDzWi8wA0kA8hNCuzC2pehSDXKBY": {
+    "NightlyExportLambdaVersionT7Wqzv6L1fCz1s6qZVOHLlYzgVzFG9ZEXzVD87kbE": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "NightlyExportLambdaFunction"
         },
-        "CodeSha256": "VdQ8K/rHNPx/16okaT0T6Tq6PDxO+/nFlLmdhBLFeq8="
+        "CodeSha256": "YUIHOrQMhPE4j4m17NineTdTY9Vi3hHyq4gTYWiccVw="
       }
     },
     "NightlyExportEventsRuleSchedule1": {
@@ -278,16 +287,19 @@
         "CorsConfiguration": {
           "AllowHeaders": [
             "Content-Type",
+            "Authorization",
             "x-dev-user"
           ],
           "AllowMethods": [
             "GET",
             "POST",
             "PUT",
-            "OPTIONS"
+            "OPTIONS",
+            "DELETE"
           ],
           "AllowOrigins": [
-            "http://localhost:4200"
+            "http://localhost:4200",
+            "https://booktok.click"
           ],
           "MaxAge": 86400
         }
@@ -303,6 +315,25 @@
         "AutoDeploy": true,
         "DefaultRouteSettings": {
           "DetailedMetricsEnabled": false
+        }
+      }
+    },
+    "HttpApiAuthorizerCognitoJwt": {
+      "Type": "AWS::ApiGatewayV2::Authorizer",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "Name": "cognitoJwt",
+        "IdentitySource": [
+          "$request.header.Authorization"
+        ],
+        "AuthorizerType": "JWT",
+        "JwtConfiguration": {
+          "Audience": [
+            "78b8ilrnvr1m8ft2ks2l06eibe"
+          ],
+          "Issuer": "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_3XVqDIc0T"
         }
       }
     },
@@ -377,6 +408,10 @@
               }
             ]
           ]
+        },
+        "AuthorizationType": "JWT",
+        "AuthorizerId": {
+          "Ref": "HttpApiAuthorizerCognitoJwt"
         }
       },
       "DependsOn": "HttpApiIntegrationBooks"
@@ -398,6 +433,10 @@
               }
             ]
           ]
+        },
+        "AuthorizationType": "JWT",
+        "AuthorizerId": {
+          "Ref": "HttpApiAuthorizerCognitoJwt"
         }
       },
       "DependsOn": "HttpApiIntegrationBooks"
@@ -419,6 +458,35 @@
               }
             ]
           ]
+        },
+        "AuthorizationType": "JWT",
+        "AuthorizerId": {
+          "Ref": "HttpApiAuthorizerCognitoJwt"
+        }
+      },
+      "DependsOn": "HttpApiIntegrationBooks"
+    },
+    "HttpApiRouteDeleteBooksIdVar": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "DELETE /books/{id}",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationBooks"
+              }
+            ]
+          ]
+        },
+        "AuthorizationType": "JWT",
+        "AuthorizerId": {
+          "Ref": "HttpApiAuthorizerCognitoJwt"
         }
       },
       "DependsOn": "HttpApiIntegrationBooks"
@@ -440,6 +508,60 @@
               }
             ]
           ]
+        },
+        "AuthorizationType": "JWT",
+        "AuthorizerId": {
+          "Ref": "HttpApiAuthorizerCognitoJwt"
+        }
+      },
+      "DependsOn": "HttpApiIntegrationBooks"
+    },
+    "HttpApiRoutePostBooksIdVarTiers": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "POST /books/{id}/tiers",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationBooks"
+              }
+            ]
+          ]
+        },
+        "AuthorizationType": "JWT",
+        "AuthorizerId": {
+          "Ref": "HttpApiAuthorizerCognitoJwt"
+        }
+      },
+      "DependsOn": "HttpApiIntegrationBooks"
+    },
+    "HttpApiRoutePostBooksIdVarTiersTieridVarAdjustDashstock": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "POST /books/{id}/tiers/{tierId}/adjust-stock",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationBooks"
+              }
+            ]
+          ]
+        },
+        "AuthorizationType": "JWT",
+        "AuthorizerId": {
+          "Ref": "HttpApiAuthorizerCognitoJwt"
         }
       },
       "DependsOn": "HttpApiIntegrationBooks"
@@ -515,6 +637,10 @@
               }
             ]
           ]
+        },
+        "AuthorizationType": "JWT",
+        "AuthorizerId": {
+          "Ref": "HttpApiAuthorizerCognitoJwt"
         }
       },
       "DependsOn": "HttpApiIntegrationEvents"
@@ -536,6 +662,10 @@
               }
             ]
           ]
+        },
+        "AuthorizationType": "JWT",
+        "AuthorizerId": {
+          "Ref": "HttpApiAuthorizerCognitoJwt"
         }
       },
       "DependsOn": "HttpApiIntegrationEvents"
@@ -557,6 +687,10 @@
               }
             ]
           ]
+        },
+        "AuthorizationType": "JWT",
+        "AuthorizerId": {
+          "Ref": "HttpApiAuthorizerCognitoJwt"
         }
       },
       "DependsOn": "HttpApiIntegrationEvents"
@@ -578,6 +712,10 @@
               }
             ]
           ]
+        },
+        "AuthorizationType": "JWT",
+        "AuthorizerId": {
+          "Ref": "HttpApiAuthorizerCognitoJwt"
         }
       },
       "DependsOn": "HttpApiIntegrationEvents"
@@ -800,6 +938,21 @@
           "ALLOW_USER_PASSWORD_AUTH",
           "ALLOW_REFRESH_TOKEN_AUTH"
         ],
+        "AllowedOAuthFlowsUserPoolClient": true,
+        "AllowedOAuthFlows": [
+          "code"
+        ],
+        "AllowedOAuthScopes": [
+          "openid",
+          "email",
+          "profile"
+        ],
+        "CallbackURLs": [
+          "http://localhost:4200"
+        ],
+        "LogoutURLs": [
+          "http://localhost:4200"
+        ],
         "RefreshTokenValidity": 30
       }
     },
@@ -849,7 +1002,8 @@
                     "dynamodb:GetItem",
                     "dynamodb:PutItem",
                     "dynamodb:UpdateItem",
-                    "dynamodb:Query"
+                    "dynamodb:Query",
+                    "dynamodb:BatchWriteItem"
                   ],
                   "Resource": [
                     {
@@ -1033,7 +1187,7 @@
     "BooksLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "BooksLambdaVersionbkderT9LQRKtMbwdVIq73xRBQi6qunAvukpXudjTvZU"
+        "Ref": "BooksLambdaVersionO7R3IAsA2oTeP2g3EWXdDlnPjwr0no4e75Qh40DD84"
       },
       "Export": {
         "Name": "sls-author-inventory-dev-BooksLambdaFunctionQualifiedArn"
@@ -1042,7 +1196,7 @@
     "EventsLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "EventsLambdaVersiondRIq8YCcdyWxDfl9xIQdjNYbDDQ2oo351FJ1CYDvA"
+        "Ref": "EventsLambdaVersiono5nCvqitCKpyjayoSjVyghQU5vIilc55b3CawSyk"
       },
       "Export": {
         "Name": "sls-author-inventory-dev-EventsLambdaFunctionQualifiedArn"
@@ -1051,7 +1205,7 @@
     "NightlyExportLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "NightlyExportLambdaVersionkxrIpLPSIzzI5qDzWi8wA0kA8hNCuzC2pehSDXKBY"
+        "Ref": "NightlyExportLambdaVersionT7Wqzv6L1fCz1s6qZVOHLlYzgVzFG9ZEXzVD87kbE"
       },
       "Export": {
         "Name": "sls-author-inventory-dev-NightlyExportLambdaFunctionQualifiedArn"

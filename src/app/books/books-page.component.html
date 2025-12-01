@@ -74,12 +74,21 @@
     </div>
 
     <div class="form-field notes-field">
-      <label for="notes">Notes</label>
+      <label for="tierNotes">Tier notes</label>
+      <textarea id="tierNotes"
+                name="tierNotes"
+                rows="2"
+                [(ngModel)]="newBook.tierNotes"
+                placeholder="Signed copies, promo price, etc."></textarea>
+    </div>
+
+    <div class="form-field notes-field">
+      <label for="notes">Book notes</label>
       <textarea id="notes"
                 name="notes"
                 rows="2"
                 [(ngModel)]="newBook.notes"
-                placeholder="Edition, location, etc."></textarea>
+                placeholder="Series info, bins, etc."></textarea>
     </div>
 
     <div class="form-actions">
@@ -93,8 +102,10 @@
 
   <app-book-list
     [books]="books$ | async"
-    [savingMap]="perBookSaving"
-    (adjust)="handleAdjust($event)"
+    [bookSavingMap]="perBookSaving"
+    [tierSavingMap]="perTierSaving"
+    (adjustTier)="handleAdjust($event)"
+    (addTier)="handleAddTier($event)"
     (remove)="confirmRemove($event)">
   </app-book-list>
 </section>

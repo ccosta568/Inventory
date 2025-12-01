@@ -1,35 +1,29 @@
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
 
+const ALLOW_DEV_FALLBACK = process.env.ALLOW_DEV_AUTH === 'true';
+const DEV_FALLBACK_USER = process.env.DEV_AUTH_USER ?? 'dev-user';
+
 /**
- * TEMP DEV AUTH:
- *  - Accepts an optional `x-dev-user` header to scope data locally.
- *  - Falls back to `dev-user` when no header/JWT is present.
- *  - TODO: Replace with proper Cognito JWT validation once authorizer is re-enabled.
+ * Resolves the caller's identity from the Cognito-provided JWT claims. A dev fallback is
+ * available when ALLOW_DEV_FALLBACK is enabled for offline testing.
  */
 export function requireUserId(event: APIGatewayProxyEventV2): string {
-  const headers = event?.headers ?? {};
-  const headerKey = Object.keys(headers).find((key) => key.toLowerCase() === 'x-dev-user');
-  const headerUser = headerKey ? headers[headerKey] : undefined;
-  if (headerUser) {
-    return headerUser;
+  const claims: Record<string, unknown> | undefined =
+    (event as any)?.requestContext?.authorizer?.jwt?.claims;
+  const sub = typeof claims?.sub === 'string' ? claims.sub : undefined;
+  if (sub) {
+    return sub;
   }
 
-  const ctx: any = event?.requestContext;
-  const jwt = ctx?.authorizer?.jwt;
-
-  if (!jwt?.claims) {
-    return 'dev-user';
+  if (ALLOW_DEV_FALLBACK) {
+    const headers = event?.headers ?? {};
+    const headerKey = Object.keys(headers).find((key) => key.toLowerCase() === 'x-dev-user');
+    const headerUser = headerKey ? headers[headerKey] : undefined;
+    if (typeof headerUser === 'string' && headerUser.trim()) {
+      return headerUser;
+    }
+    return DEV_FALLBACK_USER;
   }
 
-  console.log('Auth context:', JSON.stringify(ctx?.authorizer ?? {}, null, 2));
-
-  const rawEmail =
-    (jwt.claims.email as string | undefined) ??
-    (jwt.claims['cognito:username'] as string | undefined) ??
-    (jwt.claims.username as string | undefined);
-  const email = rawEmail?.toLowerCase();
-  console.log('JWT email claim:', email ?? 'n/a');
-
-  const sub = jwt.claims.sub as string | undefined;
-  return sub ?? email ?? 'unknown-user';
+  throw new Error('Unauthorized');
 }

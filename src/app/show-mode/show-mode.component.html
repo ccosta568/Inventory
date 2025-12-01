@@ -30,15 +30,26 @@
   </div>
 
   <div class="show-grid">
-    <div class="show-card" *ngFor="let book of books$ | async">
+    <div class="show-card" *ngFor="let card of cards$ | async">
       <div class="info">
-        <h3>{{ book.title }}</h3>
-        <p class="meta">{{ book.format }} • On hand: {{ book.copiesOnHand }}</p>
+        <h3>{{ card.title }}</h3>
+        <p class="meta">
+          {{ card.format }} • {{ card.price | currency:'USD':'symbol':'1.0-0' }} • On hand: {{ card.copiesOnHand }}
+        </p>
+        <p class="tier-notes" *ngIf="card.notes">{{ card.notes }}</p>
       </div>
       <div class="counter">
-        <button type="button" (click)="adjustSelection(book.id, -1)" [disabled]="!selections[book.id]">-</button>
-        <span>{{ selections[book.id] || 0 }}</span>
-        <button type="button" (click)="adjustSelection(book.id, 1)">+1</button>
+        <button type="button"
+                (click)="adjustSelection(card, -1)"
+                [disabled]="!currentSelection(card)">
+          -
+        </button>
+        <span>{{ currentSelection(card) }}</span>
+        <button type="button"
+                (click)="adjustSelection(card, 1)"
+                [disabled]="!canIncrement(card)">
+          +1
+        </button>
       </div>
     </div>
   </div>

@@ -50,32 +50,65 @@
   padding: 1rem;
 }
 
-.best-sellers ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.seller-list {
+  display: grid;
+  gap: 0.75rem;
 }
 
-.best-sellers li {
+.seller-card {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+}
+
+.seller-header {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 0;
+  align-items: flex-start;
+  gap: 0.5rem;
   border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  padding-bottom: 0.5rem;
 }
 
-.best-sellers li:last-child {
-  border-bottom: none;
-}
-
-.best-sellers .title {
+.seller-header .title {
+  margin: 0;
   font-weight: 600;
 }
 
-.best-sellers .qty {
+.seller-header .format {
+  margin: 0.1rem 0 0;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.seller-header .totals span {
+  display: block;
   color: #475569;
+  font-size: 0.85rem;
+}
+
+.seller-header .totals strong {
+  font-size: 1.1rem;
+  color: #0f172a;
+}
+
+.tier-breakdown {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tier-breakdown li {
+  display: flex;
+  justify-content: space-between;
+  color: #475569;
+  font-size: 0.9rem;
 }
 
 .best-sellers .empty {
-  justify-content: center;
+  margin: 0.5rem 0 0;
   color: #94a3b8;
 }

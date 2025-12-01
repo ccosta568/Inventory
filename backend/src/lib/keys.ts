@@ -12,6 +12,14 @@ export function bookSortKey(bookId: string): string {
   return `BOOK#${bookId}`;
 }
 
+export function tierSortKey(bookId: string, tierId: string): string {
+  return `BOOK#${bookId}#TIER#${tierId}`;
+}
+
+export function tierPrefix(bookId: string): string {
+  return `BOOK#${bookId}#TIER#`;
+}
+
 export function eventPartition(ownerId: string): string {
   return `EVENT#${ownerPartition(ownerId)}`;
 }

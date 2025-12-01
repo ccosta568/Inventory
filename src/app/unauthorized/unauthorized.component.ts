@@ -9,7 +9,7 @@ import { RouterLink } from '@angular/router';
   template: `
     <section class="unauthorized">
       <h1>Unauthorized</h1>
-      <p>You do not have access to view this page.</p>
+      <p>Please sign in to access your inventory.</p>
       <a routerLink="/">Return to home</a>
     </section>
   `,

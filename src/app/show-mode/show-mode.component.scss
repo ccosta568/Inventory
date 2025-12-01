@@ -118,6 +118,22 @@ header {
   gap: 0.75rem;
 }
 
+.show-card h3 {
+  margin: 0 0 0.2rem;
+}
+
+.show-card .meta {
+  margin: 0;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.show-card .tier-notes {
+  margin: 0.2rem 0 0;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
 .counter {
   display: flex;
   align-items: center;

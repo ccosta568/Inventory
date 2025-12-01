@@ -1,0 +1,23 @@
+{
+  "name": "author-inventory-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.1692.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.119",
+    "@types/node": "^18.18.0",
+    "@types/uuid": "^9.0.2",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "bundle:books": "npm run build && node ./scripts/create-books-zip.mjs",
+    "start": "serverless offline"
+  }
+}

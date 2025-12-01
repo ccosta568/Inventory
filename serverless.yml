@@ -1,6 +1,7 @@
 service: author-inventory
 
 # frameworkVersion: '3'
+useDotenv: true
 
 custom:
   serverless-offline:
@@ -9,6 +10,10 @@ custom:
   exportBucketName: author-inventory-exports-${sls:stage}
   siteBucketName: author-inventory-site-${sls:stage}
   cognitoDomainPrefix: author-inventory-${sls:stage}
+  cognito:
+    userPoolId: ${env:COGNITO_USER_POOL_ID}
+    userPoolClientId: ${env:COGNITO_USER_POOL_CLIENT_ID}
+    issuer: ${env:COGNITO_ISSUER}
   serverlessPluginTypescript:
     tsConfigFileLocation: backend/tsconfig.json
 
@@ -23,36 +28,34 @@ provider:
       Ref: InventoryTable
     EXPORT_BUCKET_NAME:
       Ref: InventoryExportBucket
-    ALLOW_DEV_AUTH: ${env:ALLOW_DEV_AUTH, 'true'}
+    COGNITO_USER_POOL_ID: ${env:COGNITO_USER_POOL_ID}
+    COGNITO_USER_POOL_CLIENT_ID: ${env:COGNITO_USER_POOL_CLIENT_ID}
+    COGNITO_DOMAIN: ${env:COGNITO_DOMAIN}
+    ALLOW_DEV_AUTH: false
     DEV_AUTH_USER: ${env:DEV_AUTH_USER, 'dev-user'}
   httpApi:
     cors:
       allowedOrigins:
         - 'http://localhost:4200'
+        - https://booktok.click
       allowedMethods:
         - GET
         - POST
         - PUT
         - OPTIONS
+        - DELETE
       allowedHeaders:
         - Content-Type
+        - Authorization
         - x-dev-user
-      exposeHeaders: []
       maxAge: 86400
-     # Temporarily disable Cognito authorizer while we just test the API
-    # authorizers:
-    #   cognitoAuthorizer:
-    #     type: jwt
-    #     identitySource: '$request.header.Authorization'
-    #     issuer:
-    #       Fn::Join:
-    #         - ''
-    #         - - 'https://cognito-idp.'
-    #           - ${self:provider.region}
-    #           - '.amazonaws.com/'
-    #           - { Ref: CognitoUserPool }
-    #     audience:
-    #       - { Ref: CognitoUserPoolClient }
+    authorizers:
+      cognitoJwt:
+        type: jwt
+        identitySource: '$request.header.Authorization'
+        issuerUrl: ${self:custom.cognito.issuer}
+        audience:
+          - ${self:custom.cognito.userPoolClientId}
 
 plugins:
   - serverless-plugin-typescript
@@ -66,15 +69,31 @@ functions:
       - httpApi:
           path: /books
           method: get
+          authorizer: cognitoJwt
       - httpApi:
           path: /books
           method: post
+          authorizer: cognitoJwt
       - httpApi:
           path: /books/{id}
           method: put
+          authorizer: cognitoJwt
+      - httpApi:
+          path: /books/{id}
+          method: delete
+          authorizer: cognitoJwt
       - httpApi:
           path: /books/{id}/adjust-stock
           method: post
+          authorizer: cognitoJwt
+      - httpApi:
+          path: /books/{id}/tiers
+          method: post
+          authorizer: cognitoJwt
+      - httpApi:
+          path: /books/{id}/tiers/{tierId}/adjust-stock
+          method: post
+          authorizer: cognitoJwt
 
   events:
     handler: backend/src/handlers/events.handler
@@ -83,15 +102,19 @@ functions:
       - httpApi:
           path: /events
           method: get
+          authorizer: cognitoJwt
       - httpApi:
           path: /events/{id}
           method: get
+          authorizer: cognitoJwt
       - httpApi:
           path: /events
           method: post
+          authorizer: cognitoJwt
       - httpApi:
           path: /events/{id}/apply
           method: post
+          authorizer: cognitoJwt
 
   nightlyExport:
     handler: backend/src/handlers/exporter.handler
@@ -236,13 +259,17 @@ resources:
         ExplicitAuthFlows:
           - ALLOW_USER_PASSWORD_AUTH
           - ALLOW_REFRESH_TOKEN_AUTH
-        # Remove these lines:
-        # AllowedOAuthFlowsUserPoolClient: true
-        # AllowedOAuthFlows:
-        #   - password
-        # AllowedOAuthScopes:
-        #   - email
-        #   - openid
+        AllowedOAuthFlowsUserPoolClient: true
+        AllowedOAuthFlows:
+          - code
+        AllowedOAuthScopes:
+          - openid
+          - email
+          - profile
+        CallbackURLs:
+          - http://localhost:4200 # TODO: Add the deployed callback URL per stage.
+        LogoutURLs:
+          - http://localhost:4200 # TODO: Add the deployed logout URL per stage.
         RefreshTokenValidity: 30
 
     CognitoUserPoolDomain:
@@ -279,6 +306,7 @@ resources:
                     - dynamodb:PutItem
                     - dynamodb:UpdateItem
                     - dynamodb:Query
+                    - dynamodb:BatchWriteItem
                   Resource:
                     - { 'Fn::GetAtt': ['InventoryTable', 'Arn'] }
                     - Fn::Join:
